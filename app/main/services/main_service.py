@@ -8,7 +8,7 @@ redis = RedisConnection()
 redis = redis.connect()
 
 def add_pokemon_tolist(player,id_troca,pokemon):
-    # max 6
+    # adicionar no max 6 itens a lista, salvar no redis
     lista = f"lista_pokemon_player{player}"
     
     lista_atual = redis.hmget(id_troca,lista)[0] if redis.hexists(id_troca,lista) else ""
@@ -16,22 +16,25 @@ def add_pokemon_tolist(player,id_troca,pokemon):
         lista_atual.append(pokemon)
         redis.hset(id_troca,lista,lista_atual)
 
-def sum_base_experience(pokemon_list,player,id_troca):
+def sum_base_experience(pokemon_list):
+    # somar as 'base experience'
     sum = 0
     for pokemon in pokemon_list:
         sum += get_base_experience(pokemon)
 
-    chave = f"soma_experience_player{player}"
-    redis.hset(id_troca,chave,sum)
     return sum
 
 def fair_trade(id_troca,player):
     #recuperar lista de pokemon, somar experiencias e associar ao jogador solicitante
     lista_player_atual = redis.hmget(id_troca,"lista_pokemon_player1")[0] if player == '1' else redis.hmget(id_troca,"lista_pokemon_player2")[0]
     lista_other_player = redis.hmget(id_troca,"lista_pokemon_player1")[0] if player == '1' else redis.hmget(id_troca,"lista_pokemon_player2")[0]
-    sum_player_atual = sum_base_experience(lista_player_atual,player,id_troca)
-    sum_other_player = sum_base_experience(sum_other_player,player,id_troca)
+    sum_player_atual = sum_base_experience(lista_player_atual)
+    sum_other_player = sum_base_experience(lista_other_player)
     
+    #salvando no redis a soma do jogador solicitante
+    chave = f"soma_experience_player{player}"
+    redis.hset(id_troca,chave,sum_player_atual)
+
     #taxa de 'proximo' como chave do redis, para facil alteracao/manuntencao
     default = 0.80
     fair_percentage = redis.get(fair_percentage)
