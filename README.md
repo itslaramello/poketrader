@@ -4,8 +4,8 @@
 Aplicação back para ser integrada e usada como calculadora de 'fair trade'.
 
 Foram utilizados:
-MongoDB
-Redis
+MongoDB, 
+Redis e 
 Python
 
 A ideia é ter o Redis como acesso rápido a informações de cada troca durante o processamento da mesma, facilitando o processamento de diversas trocas diferentes em simultâneo, controladas pelo seu id.
