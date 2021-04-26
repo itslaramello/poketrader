@@ -16,3 +16,5 @@ Funções disponíveis:
 - analisar as condições da troca e decidir entre justa ou não
 - recuperar todos os dados de cada troca realizada pelo jogador solicitante
 - persistência dos dados no Mongo
+
+Configurações como dados de acesso ao banco e parâmetros de comunicação com api PokeTrade são separadas por ambiente (dev/prd) e estão na pasta de config.
